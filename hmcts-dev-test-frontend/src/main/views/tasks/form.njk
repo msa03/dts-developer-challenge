@@ -1,0 +1,161 @@
+{% extends "../template.njk" %}
+
+{% block pageTitle %}{% if isNew %}Create Task{% else %}Edit Task{% endif %} - HMCTS{% endblock %}
+
+{% block content %}
+  <div class="govuk-width-container">
+    <main class="govuk-main-wrapper">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <a href="/tasks" class="govuk-back-link">Back to tasks</a>
+
+          <h1 class="govuk-heading-xl">
+            {% if isNew %}
+              Create a new task
+            {% else %}
+              Edit task
+            {% endif %}
+          </h1>
+
+          {% if error %}
+            <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+              <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+              </h2>
+              <div class="govuk-error-summary__body">
+                {{ error }}
+              </div>
+            </div>
+          {% endif %}
+
+            <form method="post" action="{% if isNew %}/tasks{% else %}/tasks/{{ task.id }}{% endif %}">
+              <div class="govuk-form-group">
+                <label class="govuk-label" for="title">
+                  Task title
+                </label>
+                <input
+                  class="govuk-input"
+                  id="title"
+                  name="title"
+                  type="text"
+                  value="{{ formValues.title if formValues else (task.title if task else '') }}"
+                  maxlength="255"
+                  required
+                >
+            </div>
+
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="description">
+                <span class="govuk-label__text">Description (optional)</span>
+              </label>
+                <textarea
+                  class="govuk-textarea"
+                  id="description"
+                  name="description"
+                  rows="4"
+                >{{ formValues.description if formValues else (task.description if task else '') }}</textarea>
+              </div>
+
+              <div class="govuk-form-group">
+                <label class="govuk-label" for="status">Status</label>
+                <select class="govuk-select" id="status" name="status">
+                  <option value="TODO" {% if (formValues and formValues.status == 'TODO') or (not formValues and (not task or task.status == 'TODO')) %}selected{% endif %}>To do</option>
+                  <option value="IN_PROGRESS" {% if (formValues and formValues.status == 'IN_PROGRESS') or (not formValues and task and task.status == 'IN_PROGRESS') %}selected{% endif %}>In progress</option>
+                  <option value="DONE" {% if (formValues and formValues.status == 'DONE') or (not formValues and task and task.status == 'DONE') %}selected{% endif %}>Done</option>
+                </select>
+              </div>
+
+            <div class="govuk-form-group">
+              <fieldset class="govuk-fieldset" role="group" aria-describedby="due-date-hint">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                  Due date
+                </legend>
+                <div id="due-date-hint" class="govuk-hint">
+                  For example, 27 3 2007
+                </div>
+                <div class="govuk-date-input" id="due-date">
+                  <div class="govuk-date-input__item">
+                    <div class="govuk-form-group">
+                      <label class="govuk-label govuk-date-input__label" for="dueDate-day">
+                        Day
+                      </label>
+                      <input
+                        class="govuk-input govuk-date-input__input govuk-input--width-2"
+                        id="dueDate-day"
+                        name="dueDate-day"
+                        type="text"
+                        inputmode="numeric"
+                        required
+                        value="{{ formValues.dueDateDay if formValues else (task.dueDateTime | dateDay if task and task.dueDateTime else '') }}"
+                      >
+                    </div>
+                  </div>
+                  <div class="govuk-date-input__item">
+                    <div class="govuk-form-group">
+                      <label class="govuk-label govuk-date-input__label" for="dueDate-month">
+                        Month
+                      </label>
+                      <input
+                        class="govuk-input govuk-date-input__input govuk-input--width-2"
+                        id="dueDate-month"
+                        name="dueDate-month"
+                        type="text"
+                        inputmode="numeric"
+                        required
+                        value="{{ formValues.dueDateMonth if formValues else (task.dueDateTime | dateMonth if task and task.dueDateTime else '') }}"
+                      >
+                    </div>
+                  </div>
+                  <div class="govuk-date-input__item">
+                    <div class="govuk-form-group">
+                      <label class="govuk-label govuk-date-input__label" for="dueDate-year">
+                        Year
+                      </label>
+                      <input
+                        class="govuk-input govuk-date-input__input govuk-input--width-4"
+                        id="dueDate-year"
+                        name="dueDate-year"
+                        type="text"
+                        inputmode="numeric"
+                        required
+                        value="{{ formValues.dueDateYear if formValues else (task.dueDateTime | dateYear if task and task.dueDateTime else '') }}"
+                      >
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="dueTime">
+                Due time
+              </label>
+              <div class="govuk-hint" id="dueTime-hint">
+                Use 24-hour format, for example 14:30
+              </div>
+              <input
+                class="govuk-input govuk-input--width-5"
+                id="dueTime"
+                name="dueTime"
+                type="text"
+                inputmode="numeric"
+                aria-describedby="dueTime-hint"
+                placeholder="HH:MM"
+                required
+                value="{{ formValues.dueTime if formValues else (task.dueDateTime | timeHHMM if task and task.dueDateTime else '') }}"
+              >
+            </div>
+
+            <button type="submit" class="govuk-button">
+              {% if isNew %}
+                Create task
+              {% else %}
+                Save changes
+              {% endif %}
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+{% endblock %}
