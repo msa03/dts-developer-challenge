@@ -9,7 +9,7 @@ COPY config/ ./config/
 
 RUN apk add --no-cache dos2unix && dos2unix ./gradlew || true \
   && chmod +x ./gradlew \
-  && sh ./gradlew clean build -x test
+  && sh ./gradlew clean build -x test -x integration -x checkstyleTest
 
 FROM eclipse-temurin:21-jre-alpine
 

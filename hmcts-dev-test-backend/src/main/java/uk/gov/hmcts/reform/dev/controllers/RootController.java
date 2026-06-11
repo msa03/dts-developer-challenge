@@ -11,6 +11,6 @@ public class RootController {
 
     @GetMapping("/")
     public ResponseEntity<String> welcome() {
-        return ok("HMCTS task management API");
+        return ok("Welcome to HMCTS Task Management API");
     }
 }

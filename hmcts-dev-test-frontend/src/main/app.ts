@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 glob
   .sync(__dirname + '/routes/**/*.+(ts|js)')
   .map(filename => require(filename))
-  .forEach(route => route.default(app));
+  .forEach(route => typeof route.default === 'function' && route.default(app));
 
 setupDev(app, developmentMode);
 
