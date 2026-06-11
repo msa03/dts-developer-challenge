@@ -1,4 +1,5 @@
 # HMCTS Dev Test Frontend
+This is the frontend for the brand new HMCTS case management system.
 
 To begin, run the following commands:
 1) `yarn install`
